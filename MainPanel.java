@@ -7,7 +7,7 @@ class MainPanel extends JPanel {
 
   public MainPanel(MainFrame f) {
     frame = f;
-    setBounds(0, 0, 640, 480);
+    setBounds(0, 0, Sprite.SCREEN_WIDTH, Sprite.SCREEN_HEIGHT);
 
     JButton wbutton = new JButton("対戦待ちをする");
     wbutton.addActionListener(new ActionListener() {

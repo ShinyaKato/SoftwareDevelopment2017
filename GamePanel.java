@@ -44,10 +44,10 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
 
     for(int i = 0; i < Sprite.WIDTH; i++) {
       for(int j = 0; j < Sprite.HEIGHT; j++) {
-        if(i == 0 || i == Sprite.WIDTH - 1 || j == 0 || j == Sprite.HEIGHT - 1) {
+        if(i == 0 || i == Sprite.WIDTH - 1 || j == 0 || j == Sprite.HEIGHT - 1 || (i % 2 == 0 && j % 2 == 0)) {
           cells[i][j] = new FieldWallCell(i, j);
         } else {
-          cells[i][j] = new FieldFloorCell(i, j);
+          cells[i][j] = new FieldFloorCell(i, j, !((i < 3 && j < 3) || (i > Sprite.WIDTH - 4 && j > Sprite.HEIGHT - 4)));
         }
       }
     }

@@ -1,5 +1,6 @@
 public abstract class FieldCell extends Sprite {
   protected Player player;
+  protected boolean blocked;
 
   public static boolean isin(int x, int y) {
     return 0 <= x && x < WIDTH && 0 <= y && y < HEIGHT;

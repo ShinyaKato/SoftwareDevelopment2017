@@ -9,7 +9,7 @@ public class ClientPanel extends JPanel {
 
   public ClientPanel(MainFrame f) {
     frame = f;
-    setBounds(0, 0, 640, 480);
+    setBounds(0, 0, Sprite.SCREEN_WIDTH, Sprite.SCREEN_WIDTH);
 
     JLabel text = new JLabel("対戦相手のマシン名を入力してください");
     add(text);

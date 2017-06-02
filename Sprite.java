@@ -2,8 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public abstract class Sprite {
-  public static final int WIDTH = 16;
-  public static final int HEIGHT = 12;
+  public static final int WIDTH = 17;
+  public static final int HEIGHT = 13;
   public static final int CELL_WIDTH = 40;
   public static final int CELL_HEIGHT = 40;
   public static final int SCREEN_WIDTH = CELL_WIDTH * WIDTH;

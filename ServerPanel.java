@@ -7,7 +7,7 @@ public class ServerPanel extends JPanel {
 
   public ServerPanel(MainFrame f) {
     frame = f;
-    setBounds(0, 0, 640, 480);
+    setBounds(0, 0, Sprite.SCREEN_WIDTH, Sprite.SCREEN_HEIGHT);
 
     JLabel text = new JLabel("接続を待機しています");
     add(text);

@@ -24,7 +24,7 @@ public class MainFrame extends JFrame{
 
     mainPanel.setVisible(true);
     pane.add(mainPanel);
-    pane.setPreferredSize(new Dimension(640, 480));
+    pane.setPreferredSize(new Dimension(Sprite.SCREEN_WIDTH, Sprite.SCREEN_HEIGHT));
 
     serverPanel.setVisible(false);
     pane.add(serverPanel);
