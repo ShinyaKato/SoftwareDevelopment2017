@@ -8,6 +8,10 @@ public class Player extends Sprite {
     this.color = Color.yellow;
   }
 
+  public Point currentPosition() {
+    return new Point(x, y);
+  }
+
   public Point nextPosition(int dir) {
     return new Point(x + DIFF[dir], y + DIFF[dir + 1]);
   }

@@ -9,8 +9,5 @@ public class FieldWallCell extends FieldCell {
   public boolean canMove(int x, int y) {
     return false;
   }
-
-  public void moveTo(int x, int y, Player player) {
-  }
 }
 

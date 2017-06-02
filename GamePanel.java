@@ -38,6 +38,10 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
       keyInput[i] = new KeyInput(in, out);
     }
 
+    this.playerNo = playerNo;
+    player[0] = new Player(1, 1);
+    player[1] = new Player(Sprite.WIDTH - 2, Sprite.HEIGHT - 2);
+
     for(int i = 0; i < Sprite.WIDTH; i++) {
       for(int j = 0; j < Sprite.HEIGHT; j++) {
         if(i == 0 || i == Sprite.WIDTH - 1 || j == 0 || j == Sprite.HEIGHT - 1) {
@@ -47,10 +51,8 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
         }
       }
     }
-
-    this.playerNo = playerNo;
-    player[0] = new Player(Sprite.WIDTH - 2, Sprite.HEIGHT - 2);
-    player[1] = new Player(1, 1);
+    cells[1][1].set(player[0]);
+    cells[Sprite.WIDTH - 2][Sprite.HEIGHT - 2].set(player[1]);
 
     counter = 0;
   }
@@ -91,10 +93,13 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
     for(int i = 0; i < 2; i++) {
       int dir = keyInput[i].moveDirection();
       if(dir >= 0) {
+        Point currentPos = player[i].currentPosition();
         Point nextPos = player[i].nextPosition(dir);
         if(FieldCell.isin(nextPos.x, nextPos.y) && cells[nextPos.x][nextPos.y].canMove(nextPos.x, nextPos.y)) {
           // セルの処理
           player[i].moveTo(nextPos.x, nextPos.y);
+          cells[currentPos.x][currentPos.y].remove(player[i]);
+          cells[nextPos.x][nextPos.y].set(player[i]);
         }
       }
     }

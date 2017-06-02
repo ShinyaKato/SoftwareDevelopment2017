@@ -1,4 +1,6 @@
 public abstract class FieldCell extends Sprite {
+  protected Player player;
+
   public static boolean isin(int x, int y) {
     return 0 <= x && x < WIDTH && 0 <= y && y < HEIGHT;
   }
@@ -9,5 +11,13 @@ public abstract class FieldCell extends Sprite {
 
   public abstract boolean canMove(int x, int y);
 
-  public abstract void moveTo(int x, int y, Player player);
+  public void remove(Player player) {
+    if(this.player == player) {
+      this.player = null;
+    }
+  }
+
+  public void set(Player player) {
+    this.player = player;
+  }
 }
