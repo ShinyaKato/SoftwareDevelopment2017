@@ -1,12 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class Bomb extends Sprite {
+public class Fire extends Sprite {
   public int count = 90;
 
-  public Bomb(int x, int y) {
+  public Fire(int x, int y) {
     super(x, y);
-    this.color = Color.black;
+    this.color = Color.red;
   }
 
   public void update() {

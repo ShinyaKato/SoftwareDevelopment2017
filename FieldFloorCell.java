@@ -17,10 +17,10 @@ public class FieldFloorCell extends FieldCell {
   }
 
   public void paint(Graphics g) {
-    g.setColor(color);
-    g.fillRect(x * CELL_WIDTH, y * CELL_HEIGHT, CELL_WIDTH, CELL_HEIGHT);
+    super.paint(g);
     if(block != null) block.paint(g);
-    if(item != null) item.paint(g);
     if(bomb != null) bomb.paint(g);
+    if(fire != null) fire.paint(g);
+    if(item != null) item.paint(g);
   }
 }

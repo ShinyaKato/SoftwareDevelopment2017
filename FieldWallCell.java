@@ -6,6 +6,9 @@ public class FieldWallCell extends FieldCell {
     color = Color.blue;
   }
 
+  public void update() {
+  }
+
   public boolean canMove(int x, int y) {
     return false;
   }
