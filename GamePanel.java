@@ -47,7 +47,10 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
         if(i == 0 || i == Sprite.WIDTH - 1 || j == 0 || j == Sprite.HEIGHT - 1 || (i % 2 == 0 && j % 2 == 0)) {
           cells[i][j] = new FieldWallCell(i, j);
         } else {
-          cells[i][j] = new FieldFloorCell(i, j, !((i < 3 && j < 3) || (i > Sprite.WIDTH - 4 && j > Sprite.HEIGHT - 4)));
+          cells[i][j] = new FieldFloorCell(i, j);
+          if(!((i < 3 && j < 3) || (i > Sprite.WIDTH - 4 && j > Sprite.HEIGHT - 4))) {
+            cells[i][j].set(new Block(i, j));
+          }
         }
       }
     }
@@ -96,11 +99,16 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
         Point currentPos = player[i].currentPosition();
         Point nextPos = player[i].nextPosition(dir);
         if(FieldCell.isin(nextPos.x, nextPos.y) && cells[nextPos.x][nextPos.y].canMove(nextPos.x, nextPos.y)) {
-          // セルの処理
           player[i].moveTo(nextPos.x, nextPos.y);
           cells[currentPos.x][currentPos.y].remove(player[i]);
           cells[nextPos.x][nextPos.y].set(player[i]);
         }
+      }
+
+      if(keyInput[i].bombDirection()) {
+        Point currentPos = player[i].currentPosition();
+        Bomb bomb = new Bomb(currentPos.x, currentPos.y);
+        cells[currentPos.x][currentPos.y].set(bomb);
       }
     }
   }

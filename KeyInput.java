@@ -57,6 +57,6 @@ public class KeyInput {
   }
 
   public boolean bombDirection() {
-    return false; // TODO
+    return state[KeyEvent.VK_SPACE] > 0;
   }
 }
