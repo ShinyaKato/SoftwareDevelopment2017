@@ -17,6 +17,8 @@ public abstract class FieldCell extends Sprite {
 
   public abstract boolean canMove(int x, int y);
 
+  public abstract boolean whichType(int x, int y);
+
   public void remove(Player player) {
     if(this.player == player) {
       this.player = null;

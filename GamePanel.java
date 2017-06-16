@@ -104,7 +104,61 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
         if(bomb != null && bomb.exploded()) {
           /* TODO: 爆風の広がり, ブロックが壊れる処理を実装する */
           cells[i][j].remove(bomb);
-          cells[i][j].set(new Fire(i, j));
+	  cells[i][j].set(new Fire(i, j));
+	  
+	   for(int n =1 ; n<3 ; n++){
+	      if(i+n>=Sprite.WIDTH) break;
+	      Block block = cells[i+n][j].getBlock();
+	      if(block != null){
+		  cells[i+n][j].remove(block);
+		  cells[i+n][j].set(new Fire(i+n, j));
+		  break;
+	      }else if (cells[i+n][j].whichType(i+n,j)){
+		  cells[i+n][j].set(new Fire(i+n, j)); 
+	      }else{
+		  break;
+	      }
+	  }
+	  for(int n =1 ; n<3 ; n++){
+	      if(i-n<=0) break;
+	      Block block = cells[i-n][j].getBlock();
+	      if(block != null){
+		  cells[i-n][j].remove(block);
+		  cells[i-n][j].set(new Fire(i-n, j));
+		  break;
+	      }else if (cells[i-n][j].whichType(i-n,j)){
+		  cells[i-n][j].set(new Fire(i-n, j)); 
+	      }else{
+		  break;
+		 
+	      }
+	  }
+	    for(int m =1 ; m<3 ; m++){
+	       if(j+m>=Sprite.HEIGHT) break;
+	      Block block = cells[i][j+m].getBlock();
+	       if(block != null){
+		  cells[i][j+m].remove(block);
+		  cells[i][j+m].set(new Fire(i, j+m));
+		  break;
+	      }else if (cells[i][j+m].whichType(i,j+m)){
+		  cells[i][j+m].set(new Fire(i, j+m)); 
+	      }else{
+		  break; 
+	      }
+	   }
+	     for(int m =1 ; m<3 ; m++){
+	       if(j-m<=0) break;
+	      Block block = cells[i][j-m].getBlock();
+	       if(block != null){
+		  cells[i][j-m].remove(block);
+		  cells[i][j-m].set(new Fire(i, j-m));
+		  break;
+	      }else if (cells[i][j-m].whichType(i,j-m)){
+		  cells[i][j-m].set(new Fire(i, j-m)); 
+	      }else{
+		  break;
+	      }
+	   }
         }
       }
     }

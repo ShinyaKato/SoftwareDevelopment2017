@@ -16,6 +16,10 @@ public class FieldFloorCell extends FieldCell {
     return player == null && block == null && bomb == null;
   }
 
+    public boolean whichType(int x, int y){
+	return true;
+    }
+
   public void paint(Graphics g) {
     super.paint(g);
     if(block != null) block.paint(g);
