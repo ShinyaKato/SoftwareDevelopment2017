@@ -23,6 +23,8 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
 
   private int counter;
 
+  private boolean gmoflg = false; //flag of gameover
+
   public GamePanel(MainFrame f) {
     frame = f;
     setBounds(0, 0, Sprite.SCREEN_WIDTH, Sprite.SCREEN_HEIGHT);
@@ -80,7 +82,7 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
       }
 
       updateGameState();
-      repaint();
+      repaint(); //paintComponent呼び出し
 
       try {
         long past = System.currentTimeMillis() - begin;
@@ -91,6 +93,8 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
       counter++;
     }
   }
+
+
 
   public void updateGameState() {
     for(int i = 0; i < Sprite.WIDTH; i++) {
@@ -125,7 +129,19 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
     }
 
     // TODO: 勝敗判定
+    //変更〜
+    if (cells[player[playerNo].currentPosition().x][player[playerNo].currentPosition().y].getFire() != null) {
+      gmoflg = true;
+      /*System.out.println("GameOver"); //画面にメッセージを表示
+      try { //MainPanelに移動
+        Thread.sleep(3000); //3000ミリ秒Sleepする
+      } catch(InterruptedException e){}*/
+    }
+    //〜変更
+
   }
+
+
 
   public void paintComponent(Graphics g) {
     for(int i = 0; i < Sprite.WIDTH; i++) {
@@ -136,6 +152,17 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
 
     for(int i = 0; i < 2; i++) {
       player[i].paint(g);
+    }
+
+    if (gmoflg == true) {
+      Graphics2D g2 = (Graphics2D)g;
+      String text = "GAME OVER";
+      Font font = new Font("Arial", Font.BOLD, 80);
+      g2.setFont(font);
+      g2.setColor(Color.red);
+      FontMetrics fm = g.getFontMetrics();
+      Rectangle rectText = fm.getStringBounds(text, g).getBounds();
+      g2.drawString(text, Sprite.SCREEN_WIDTH/2-242, Sprite.SCREEN_HEIGHT/2+20);
     }
   }
 
