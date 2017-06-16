@@ -24,6 +24,7 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
   private int counter;
 
   private boolean gmoflg = false; //flag of gameover
+  private boolean winflg = false; //flag of showing winner
 
   public GamePanel(MainFrame f) {
     frame = f;
@@ -186,10 +187,9 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
     //変更〜
     if (cells[player[playerNo].currentPosition().x][player[playerNo].currentPosition().y].getFire() != null) {
       gmoflg = true;
-      /*System.out.println("GameOver"); //画面にメッセージを表示
-      try { //MainPanelに移動
-        Thread.sleep(3000); //3000ミリ秒Sleepする
-      } catch(InterruptedException e){}*/
+    }
+    if (cells[player[1-playerNo].currentPosition().x][player[1-playerNo].currentPosition().y].getFire() != null) {
+      winflg = true;
     }
     //〜変更
 
@@ -214,9 +214,14 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
       Font font = new Font("Arial", Font.BOLD, 80);
       g2.setFont(font);
       g2.setColor(Color.red);
-      FontMetrics fm = g.getFontMetrics();
-      Rectangle rectText = fm.getStringBounds(text, g).getBounds();
       g2.drawString(text, Sprite.SCREEN_WIDTH/2-242, Sprite.SCREEN_HEIGHT/2+20);
+    } else if (winflg == true) {
+      Graphics2D g2 = (Graphics2D)g;
+      String text = "WINNER";
+      Font font = new Font("Arial", Font.BOLD, 80);
+      g2.setFont(font);
+      g2.setColor(Color.green);
+      g2.drawString(text, Sprite.SCREEN_WIDTH/2-164, Sprite.SCREEN_HEIGHT/2+20);
     }
   }
 
