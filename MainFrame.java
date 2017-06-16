@@ -50,7 +50,6 @@ public class MainFrame extends JFrame{
           server = serverSocket.accept();
           System.out.println("Server Connection Established.");
         } catch(IOException e) {}
-
         gamePanel.init(server, 0);
         requestFocusInWindow();
         serverPanel.setVisible(false);
