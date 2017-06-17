@@ -10,6 +10,7 @@ public class FieldFloorCell extends FieldCell {
     if(block != null) block.update();
     if(bomb != null) bomb.update();
     if(item != null) item.update();
+    if(fire != null) fire.update();
   }
 
   public boolean canMove(int x, int y) {
