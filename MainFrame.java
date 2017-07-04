@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.net.*;
+import javax.swing.border.BevelBorder;
 
 public class MainFrame extends JFrame{
   private static final int PORT = 8812;
@@ -13,28 +14,39 @@ public class MainFrame extends JFrame{
   private GamePanel gamePanel = new GamePanel(this);
 
   private ServerSocket serverSocket;
+  
   private Socket server;
   private Socket client;
 
   public MainFrame(){
-    super("ゲーム画面");
+    super("ボンバーマン");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     Container pane = getContentPane();
 
     mainPanel.setVisible(true);
+    mainPanel.setBackground(Color.BLACK);
     pane.add(mainPanel);
     pane.setPreferredSize(new Dimension(Sprite.SCREEN_WIDTH, Sprite.SCREEN_HEIGHT));
 
     serverPanel.setVisible(false);
+    serverPanel.setBackground(Color.BLACK);
     pane.add(serverPanel);
 
     clientPanel.setVisible(false);
+    clientPanel.setBackground(Color.BLACK);
     pane.add(clientPanel);
 
     gamePanel.setVisible(false);
     pane.add(gamePanel);
     addKeyListener(gamePanel);
+
+    /*
+    if (GamePanel.gmoflg==true || GamePanel.winflg==true) {
+      gamePanel.setVisible(false);
+      mainPanel.setVisible(true);
+    }
+    */
 
     pack();
   }
