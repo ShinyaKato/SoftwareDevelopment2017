@@ -4,9 +4,11 @@ import java.awt.event.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.applet.*;
 
 class GamePanel extends JPanel implements Runnable, KeyListener {
   public static long MSEC_PER_FRAME = 17;
+  public static Random random = new Random(36);
 
   private MainFrame frame;
 
@@ -24,12 +26,17 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
   private int counter;
   private int counter2;
 
+  private AudioClip bgm, seBomb, seItem;
+
   public static boolean gmoflg = false;
   public static boolean winflg = false;
 
   public GamePanel(MainFrame f) {
     frame = f;
     setBounds(0, 0, Sprite.SCREEN_WIDTH, Sprite.SCREEN_HEIGHT);
+    bgm = java.applet.Applet.newAudioClip(getClass().getResource("bgm.wav"));
+    seBomb = java.applet.Applet.newAudioClip(getClass().getResource("explosion.wav"));
+    seItem = java.applet.Applet.newAudioClip(getClass().getResource("item.wav"));
   }
 
   public void init(Socket s, int playerNo) {
@@ -52,7 +59,7 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
           cells[i][j] = new FieldWallCell(i, j);
         } else {
           cells[i][j] = new FieldFloorCell(i, j);
-          if(!((i < 3 && j < 3) || (i > Sprite.WIDTH - 4 && j > Sprite.HEIGHT - 4))) {
+          if(!((i < 3 && j < 3) || (i > Sprite.WIDTH - 4 && j > Sprite.HEIGHT - 4)) && random.nextInt(17) < 15) {
             cells[i][j].set(new Block(i, j));
           }
         }
@@ -63,6 +70,8 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
 
     counter = 0;
     counter2 = 0;
+
+    // bgm.loop();
   }
 
   public void start() {
@@ -112,6 +121,7 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
         if(bomb != null && bomb.exploded()) {
           int range = bomb.getPlayer().getBombRange();
           bomb.expload();
+          seBomb.play();
           cells[i][j].remove(bomb);
           cells[i][j].set(new Fire(i, j));
           for(int n = 1; n <= range; n++) {
@@ -199,6 +209,7 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
           Item item = cells[nx][ny].getItem();
           if(item != null) {
             item.activate(player[i]);
+            seItem.play();
             cells[nx][ny].remove(item);
           }
         }
