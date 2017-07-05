@@ -174,12 +174,13 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
     }
 
     for(int i = 0; i < 2; i++) {
+      player[i].update();
       int dir = keyInput[i].moveDirection();
       if(dir >= 0) {
         Point currentPos = player[i].currentPosition();
         Point nextPos = player[i].nextPosition(dir);
         if(FieldCell.isin(nextPos.x, nextPos.y) && cells[nextPos.x][nextPos.y].canMove(nextPos.x, nextPos.y)) {
-          player[i].moveTo(nextPos.x, nextPos.y);
+          player[i].moveTo(nextPos.x, nextPos.y, dir);
           cells[currentPos.x][currentPos.y].remove(player[i]);
           cells[nextPos.x][nextPos.y].set(player[i]);
         }
