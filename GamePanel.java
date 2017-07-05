@@ -5,6 +5,8 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import javax.sound.sampled.*; //sound
+
 class GamePanel extends JPanel implements Runnable, KeyListener {
   public static long MSEC_PER_FRAME = 17;
 
@@ -27,9 +29,34 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
   public static boolean gmoflg = false; //flag of gameover
   public static boolean winflg = false; //flag of showing winner
 
+   Clip bgm; // サウンドクリップ（BGM)
+   Clip sc1; // サウンドクリップ（爆弾設置の音）
+   Clip sc2; //サウンドクリップ（爆破時の音）
+   Clip sc3; //loser (GAMEOVER)
+   Clip sc4; //winner
+
+   // ファイルからサウンドクリップ取得
+    public static Clip getClip(String filename) {
+        Clip clip = null;
+        try {
+            AudioInputStream ais = AudioSystem.getAudioInputStream(new File(filename));
+            clip = (Clip)AudioSystem.getLine(new Line.Info(Clip.class));
+            clip.open(ais);
+        } catch(Exception e) {
+            System.out.println(e);
+            System.exit(0);
+        }
+        return clip;
+    }
+
   public GamePanel(MainFrame f) {
     frame = f;
     setBounds(0, 0, Sprite.SCREEN_WIDTH, Sprite.SCREEN_HEIGHT);
+    bgm = getClip("bgm.mid"); // BGM読み込み
+    sc1 = getClip("setbomb.wav"); // 設置の音読み込み
+    sc2 = getClip("explode.wav"); // 爆発の音読み込み
+    sc3 = getClip("loser.wav"); //ゲームオーバー時の音
+    sc4 = getClip("winner.wav"); //Winner
   }
 
   public void init(Socket s, int playerNo) {
@@ -72,6 +99,8 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
   }
 
   public void run(){
+    bgm.setFramePosition(0); // 巻き戻し //sound
+    bgm.loop(Clip.LOOP_CONTINUOUSLY); // 繰り返し再生 //sound
     while(true) {
       long begin = System.currentTimeMillis();
 
@@ -111,6 +140,8 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
 	     }
 
         if(bomb != null && bomb.exploded()) {
+          sc2.setFramePosition(0); //罰発音巻き戻し
+          sc2.start(); //爆発音再生
           /* TODO: 爆風の広がり, ブロックが壊れる処理を実装する */
           cells[i][j].remove(bomb);
 	  cells[i][j].set(new Fire(i, j));
@@ -193,6 +224,8 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
       if(keyInput[i].bombDirection()) {
         Bomb bomb = new Bomb(cx, cy);
         cells[cx][cy].set(bomb);
+        sc1.setFramePosition(0); //爆弾設置音巻き戻し
+        sc1.start(); //爆弾設置音再生
       }
     }
 
@@ -200,9 +233,15 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
     //変更〜
     if(cells[player[playerNo].currentX()][player[playerNo].currentY()].getFire()!=null && winflg==false) {
       gmoflg = true;
-      cells[player[playerNo].currentX()][player[playerNo].currentY()].getDead(); //ダメージを受けたら、変色して動けなくしたい
+      //cells[player[playerNo].currentX()][player[playerNo].currentY()].getDead(); //ダメージを受けたら、変色して動けなくしたい
+      bgm.stop(); // BGMを止める
+      sc3.setFramePosition(0); //敗戦音巻き戻し
+      sc3.start(); //敗戦音再生
     } else if(cells[player[1-playerNo].currentX()][player[1-playerNo].currentY()].getFire()!=null && gmoflg==false) {
       winflg = true;
+      bgm.stop(); // BGMを止める
+      sc4.setFramePosition(0); //勝利音巻き戻し
+      sc4.start(); //勝利音音再生
     }
 
     if(gmoflg==true || winflg==true) {

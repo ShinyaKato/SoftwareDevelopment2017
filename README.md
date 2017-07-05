@@ -5,3 +5,7 @@
 http://seiga.nicovideo.jp/seiga/im3820724
 http://seiga.nicovideo.jp/seiga/im6345919
 http://blog.pipoya.net/blog-entry-405.html
+
+##D Sounds
+
+http://maoudamashii.jokersounds.com/
