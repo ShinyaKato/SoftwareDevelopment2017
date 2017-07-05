@@ -114,7 +114,7 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
           bomb.expload();
           cells[i][j].remove(bomb);
           cells[i][j].set(new Fire(i, j));
-          for(int n = 1; n < range; n++) {
+          for(int n = 1; n <= range; n++) {
             if(i + n >= Sprite.WIDTH) break;
             Block block = cells[i + n][j].getBlock();
             if(block != null) {
@@ -125,11 +125,12 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
               break;
             } else if(cells[i + n][j].whichType(i + n, j)) {
               cells[i + n][j].set(new Fire(i + n, j));
+              cells[i + n][j].burnItem();
             } else {
               break;
             }
           }
-          for(int n = 1; n < range; n++) {
+          for(int n = 1; n <= range; n++) {
             if(i - n <= 0) break;
             Block block = cells[i - n][j].getBlock();
             if(block != null) {
@@ -140,11 +141,12 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
               break;
             } else if(cells[i - n][j].whichType(i - n, j)) {
               cells[i - n][j].set(new Fire(i - n, j));
+              cells[i - n][j].burnItem();
             } else {
               break;
             }
           }
-          for(int m = 1 ; m < range; m++) {
+          for(int m = 1 ; m <= range; m++) {
             if(j + m >= Sprite.HEIGHT) break;
             Block block = cells[i][j + m].getBlock();
             if(block != null) {
@@ -155,11 +157,12 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
               break;
             } else if(cells[i][j + m].whichType(i, j + m)){
               cells[i][j + m].set(new Fire(i, j + m));
+              cells[i][j + m].burnItem();
             } else {
               break;
             }
           }
-          for(int m = 1; m < range; m++) {
+          for(int m = 1; m <= range; m++) {
             if(j - m <= 0) break;
             Block block = cells[i][j - m].getBlock();
             if(block != null) {
@@ -168,8 +171,9 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
               Item item = block.getItem();
               cells[i][j - m].set(item);
               break;
-            } else if(cells[i][j - m].whichType(i,j - m)) {
+            } else if(cells[i][j - m].whichType(i, j - m)) {
               cells[i][j - m].set(new Fire(i, j - m));
+              cells[i][j - m].burnItem();
             } else {
               break;
             }

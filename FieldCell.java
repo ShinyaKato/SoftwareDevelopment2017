@@ -93,4 +93,8 @@ public abstract class FieldCell extends Sprite {
   public Dead getDead() {
     return this.dead;
   }
+
+  public void burnItem() {
+    this.item = null;
+  }
 }

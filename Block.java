@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Block extends Sprite {
   private Image image;
-  private Random random = new Random();
+  private static Random random = new Random(123);
 
   public Block(int x, int y) {
     super(x, y);
