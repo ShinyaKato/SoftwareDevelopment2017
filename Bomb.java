@@ -3,7 +3,7 @@ import java.awt.*;
 
 public class Bomb extends Sprite {
   Image image;
-  public int count = 60;
+  public int count = 120;
 
   public Bomb(int x, int y) {
     super(x, y);
@@ -21,6 +21,10 @@ public class Bomb extends Sprite {
   }
 
   public void paint(Graphics g) {
-    g.drawImage(image, x * CELL_WIDTH, y * CELL_HEIGHT, (x + 1) * CELL_WIDTH, (y + 1) * CELL_HEIGHT, ((60 - count) / 10) * CELL_WIDTH, 0, (((60 - count) / 10) + 1) * CELL_WIDTH, CELL_HEIGHT, null);
+    int gx = (count > 30 ? 0 : (30 - count) / 5) * CELL_WIDTH;
+    int gy = 0;
+    int px = x * CELL_WIDTH;
+    int py = y * CELL_HEIGHT;
+    g.drawImage(image, px, py, px + CELL_WIDTH, py + CELL_HEIGHT, gx, gy, gx + CELL_WIDTH, gy + CELL_HEIGHT, null);
   }
 }

@@ -125,7 +125,7 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
               break;
             }
           }
-          for(int n = 1; n < 5; n++){
+          for(int n = 1; n < 5; n++) {
             if(i - n <= 0) break;
             Block block = cells[i - n][j].getBlock();
             if(block != null) {
