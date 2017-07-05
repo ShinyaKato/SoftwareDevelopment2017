@@ -174,35 +174,38 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
     }
 
     for(int i = 0; i < 2; i++) {
+      int cx = player[i].currentX();
+      int cy = player[i].currentY();
+
       player[i].update();
+
       int dir = keyInput[i].moveDirection();
-      if(dir >= 0) {
-        Point currentPos = player[i].currentPosition();
-        Point nextPos = player[i].nextPosition(dir);
-        if(FieldCell.isin(nextPos.x, nextPos.y) && cells[nextPos.x][nextPos.y].canMove(nextPos.x, nextPos.y)) {
-          player[i].moveTo(nextPos.x, nextPos.y, dir);
-          cells[currentPos.x][currentPos.y].remove(player[i]);
-          cells[nextPos.x][nextPos.y].set(player[i]);
+      if(dir >= 0 && !player[i].isMoving()) {
+        int nx = player[i].nextX(dir);
+        int ny = player[i].nextY(dir);
+        if(FieldCell.isin(nx, ny) && cells[nx][ny].canMove(nx, ny)) {
+          player[i].moveTo(dir);
+          cells[cx][cy].remove(player[i]);
+          cells[nx][ny].set(player[i]);
         }
       }
 
       if(keyInput[i].bombDirection()) {
-        Point currentPos = player[i].currentPosition();
-        Bomb bomb = new Bomb(currentPos.x, currentPos.y);
-        cells[currentPos.x][currentPos.y].set(bomb);
+        Bomb bomb = new Bomb(cx, cy);
+        cells[cx][cy].set(bomb);
       }
     }
 
     // TODO: 勝敗判定
     //変更〜
-    if (cells[player[playerNo].currentPosition().x][player[playerNo].currentPosition().y].getFire()!=null && winflg==false) {
+    if(cells[player[playerNo].currentX()][player[playerNo].currentY()].getFire()!=null && winflg==false) {
       gmoflg = true;
-      cells[player[playerNo].currentPosition().x][player[playerNo].currentPosition().y].getDead(); //ダメージを受けたら、変色して動けなくしたい
-    } else if (cells[player[1-playerNo].currentPosition().x][player[1-playerNo].currentPosition().y].getFire()!=null && gmoflg==false) {
+      cells[player[playerNo].currentX()][player[playerNo].currentY()].getDead(); //ダメージを受けたら、変色して動けなくしたい
+    } else if(cells[player[1-playerNo].currentX()][player[1-playerNo].currentY()].getFire()!=null && gmoflg==false) {
       winflg = true;
     }
 
-    if (gmoflg==true || winflg==true) {
+    if(gmoflg==true || winflg==true) {
       counter2++;
       if (counter2 == 150) {
         //try {

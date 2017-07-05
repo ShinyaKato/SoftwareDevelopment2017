@@ -2,10 +2,14 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Player extends Sprite {
-  Image image;
-  int count = 0;
-  int dir = 0;
-  int px, py;
+  private static final int chipx[] = { 1, 2, 2, 2, 1, 1, 0, 0, 0 };
+  private static final int chipy[] = { 0, 2, 3, 1 };
+
+  private Image image;
+  private int width = CELL_WIDTH, height = CELL_HEIGHT;
+  private int count = 0;
+  private int dir = 0;
+  private int px, py;
 
   public Player(int x, int y) {
     super(x, y);
@@ -24,27 +28,38 @@ public class Player extends Sprite {
     }
   }
 
-  public Point currentPosition() {
-    return new Point(x, y);
+  public boolean isMoving() {
+    return count > 0;
   }
 
-  public Point nextPosition(int dir) {
-    return new Point(x + DIFF[dir], y + DIFF[dir + 1]);
+  public int currentX() {
+    return x;
   }
 
-  public void moveTo(int x, int y, int dir) {
+  public int currentY() {
+    return y;
+  }
+
+  public int nextX(int dir) {
+    return x + DIFF[dir];
+  }
+
+  public int nextY(int dir) {
+    return y + DIFF[dir + 1];
+  }
+
+  public void moveTo(int dir) {
     if(count == 0) {
       count = 8;
-      this.x = x;
-      this.y = y;
       this.dir = dir;
+      this.x += DIFF[dir];
+      this.y += DIFF[dir + 1];
     }
   }
 
   public void paint(Graphics g, JFrame frame) {
-    int chipx[] = { 1, 2, 2, 2, 1, 1, 0, 0, 0 };
-    int chipy[] = { 0, 2, 3, 1 };
-    int gx = chipx[count] * CELL_WIDTH, gy = chipy[dir] * CELL_HEIGHT;
-    g.drawImage(image, px, py, px + CELL_WIDTH, py + CELL_HEIGHT, gx, gy, gx + CELL_WIDTH, gy + CELL_HEIGHT, frame);
+    int gx = chipx[count] * width;
+    int gy = chipy[dir] * height;
+    g.drawImage(image, px, py, px + width, py + height, gx, gy, gx + width, gy + height, frame);
   }
 }
