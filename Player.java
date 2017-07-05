@@ -1,10 +1,17 @@
 import javax.swing.*;
+import javax.imageio.*;
 import java.awt.*;
+import java.awt.image.*;
+import java.io.*;
 
 public class Player extends Sprite {
+  BufferedImage image;
+
   public Player(int x, int y) {
     super(x, y);
-    this.color = Color.orange;
+    try {
+      this.image = ImageIO.read(new File("./monster.gif"));
+    } catch(Exception e) {}
   }
 
   public Point currentPosition() {
@@ -18,5 +25,9 @@ public class Player extends Sprite {
   public void moveTo(int x, int y) {
     this.x = x;
     this.y = y;
+  }
+
+  public void paint(Graphics g) {
+    g.drawImage(image, x * CELL_WIDTH, y * CELL_HEIGHT, null);
   }
 }
