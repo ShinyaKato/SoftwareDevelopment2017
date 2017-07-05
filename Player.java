@@ -4,7 +4,7 @@ import java.awt.*;
 public class Player extends Sprite {
   public Player(int x, int y) {
     super(x, y);
-    this.color = Color.yellow;
+    this.color = Color.orange;
   }
 
   public Point currentPosition() {

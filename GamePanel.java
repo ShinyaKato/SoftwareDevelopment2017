@@ -22,9 +22,10 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
   private int playerNo;
 
   private int counter;
+  private int counter2; //
 
-  public boolean gmoflg = false; //flag of gameover
-  public boolean winflg = false; //flag of showing winner
+  public static boolean gmoflg = false; //flag of gameover
+  public static boolean winflg = false; //flag of showing winner
 
   public GamePanel(MainFrame f) {
     frame = f;
@@ -61,6 +62,8 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
     cells[Sprite.WIDTH - 2][Sprite.HEIGHT - 2].set(player[1]);
 
     counter = 0;
+    counter2 = 0;
+
   }
 
   public void start() {
@@ -112,7 +115,7 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
           cells[i][j].remove(bomb);
 	  cells[i][j].set(new Fire(i, j));
 	  
-	   for(int n =1 ; n<3 ; n++){
+	   for(int n =1 ; n<5 ; n++){
 	      if(i+n>=Sprite.WIDTH) break;
 	      Block block = cells[i+n][j].getBlock();
 	      if(block != null){
@@ -125,7 +128,7 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
 		  break;
 	      }
 	  }
-	  for(int n =1 ; n<3 ; n++){
+	  for(int n =1 ; n<5 ; n++){
 	      if(i-n<=0) break;
 	      Block block = cells[i-n][j].getBlock();
 	      if(block != null){
@@ -139,7 +142,7 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
 		 
 	      }
 	  }
-	    for(int m =1 ; m<3 ; m++){
+	    for(int m =1 ; m<5 ; m++){
 	       if(j+m>=Sprite.HEIGHT) break;
 	      Block block = cells[i][j+m].getBlock();
 	       if(block != null){
@@ -152,7 +155,7 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
 		  break; 
 	      }
 	   }
-	     for(int m =1 ; m<3 ; m++){
+	     for(int m =1 ; m<5 ; m++){
 	       if(j-m<=0) break;
 	      Block block = cells[i][j-m].getBlock();
 	       if(block != null){
@@ -193,12 +196,26 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
     //変更〜
     if (cells[player[playerNo].currentPosition().x][player[playerNo].currentPosition().y].getFire()!=null && winflg==false) {
       gmoflg = true;
+      cells[player[playerNo].currentPosition().x][player[playerNo].currentPosition().y].getDead(); //ダメージを受けたら、変色して動けなくしたい
     } else if (cells[player[1-playerNo].currentPosition().x][player[1-playerNo].currentPosition().y].getFire()!=null && gmoflg==false) {
       winflg = true;
+    }
+
+    if (gmoflg==true || winflg==true) {
+      counter2++;
+      if (counter2 == 150) {
+        //try {
+          //Thread.sleep(3000);
+        //} catch (InterruptedException e) {}
+        //setVisible(false);
+        //MainFrame.mainPanel.setVisible(true);
+        System.exit(0);
+      }
     }
     //〜変更
 
   }
+
 
 
 
