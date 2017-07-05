@@ -1,9 +1,14 @@
+import javax.swing.*;
 import java.awt.*;
 
 public class FieldFloorCell extends FieldCell {
+  Image image;
+
   public FieldFloorCell(int x, int y) {
     super(x, y);
-    this.color = Color.white;
+    try {
+      this.image = new ImageIcon("./floor.png").getImage();
+    } catch(Exception e) {}
   }
 
   public void update() {
@@ -22,7 +27,7 @@ public class FieldFloorCell extends FieldCell {
     }
 
   public void paint(Graphics g) {
-    super.paint(g);
+    g.drawImage(image, x * CELL_WIDTH, y * CELL_HEIGHT, null);
     if(block != null) block.paint(g);
     if(bomb != null) bomb.paint(g);
     if(fire != null) fire.paint(g);

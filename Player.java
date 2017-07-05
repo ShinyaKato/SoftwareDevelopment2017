@@ -7,7 +7,7 @@ public class Player extends Sprite {
   public Player(int x, int y) {
     super(x, y);
     try {
-      this.image = new ImageIcon("./monster.gif").getImage();
+      this.image = new ImageIcon("./player.png").getImage();
     } catch(Exception e) {}
   }
 
@@ -25,6 +25,6 @@ public class Player extends Sprite {
   }
 
   public void paint(Graphics g, JFrame frame) {
-    g.drawImage(image, x * CELL_WIDTH, y * CELL_HEIGHT, frame);
+    g.drawImage(image, x * CELL_WIDTH, y * CELL_HEIGHT, (x + 1) * CELL_WIDTH, (y + 1) * CELL_HEIGHT, CELL_WIDTH, 0, CELL_WIDTH * 2, CELL_HEIGHT, frame);
   }
 }
