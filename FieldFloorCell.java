@@ -13,8 +13,8 @@ public class FieldFloorCell extends FieldCell {
 
   public void update() {
     if(block != null) block.update();
-    if(bomb != null) bomb.update();
     if(item != null) item.update();
+    if(bomb != null) bomb.update();
     if(fire != null) fire.update();
   }
 
@@ -22,9 +22,9 @@ public class FieldFloorCell extends FieldCell {
     return player == null && block == null && bomb == null;
   }
 
-    public boolean whichType(int x, int y){
-      return true;
-    }
+  public boolean whichType(int x, int y){
+    return true;
+  }
 
   public void paint(Graphics g) {
     g.drawImage(image, x * CELL_WIDTH, y * CELL_HEIGHT, null);

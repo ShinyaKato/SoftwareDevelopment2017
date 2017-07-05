@@ -19,7 +19,7 @@ public class Bomb extends Sprite {
     this.x = x;
     this.y = y;
     this.used = true;
-    this.count = 120;
+    this.count = 150;
   }
 
   public void update() {
@@ -44,6 +44,9 @@ public class Bomb extends Sprite {
 
   public void paint(Graphics g) {
     int gx = (count > 30 ? 0 : (30 - count) / 5) * CELL_WIDTH;
+    if(30 < count && count <= 90) {
+      gx = (1 + ((90 - count) / 15) % 2) * CELL_WIDTH;
+    }
     int gy = 0;
     int px = x * CELL_WIDTH;
     int py = y * CELL_HEIGHT;
