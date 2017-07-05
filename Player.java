@@ -1,16 +1,13 @@
 import javax.swing.*;
-import javax.imageio.*;
 import java.awt.*;
-import java.awt.image.*;
-import java.io.*;
 
 public class Player extends Sprite {
-  BufferedImage image;
+  Image image;
 
   public Player(int x, int y) {
     super(x, y);
     try {
-      this.image = ImageIO.read(new File("./monster.gif"));
+      this.image = new ImageIcon("./monster.gif").getImage();
     } catch(Exception e) {}
   }
 
@@ -27,7 +24,7 @@ public class Player extends Sprite {
     this.y = y;
   }
 
-  public void paint(Graphics g) {
-    g.drawImage(image, x * CELL_WIDTH, y * CELL_HEIGHT, null);
+  public void paint(Graphics g, JFrame frame) {
+    g.drawImage(image, x * CELL_WIDTH, y * CELL_HEIGHT, frame);
   }
 }

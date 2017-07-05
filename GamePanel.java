@@ -227,7 +227,7 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
     }
 
     for(int i = 0; i < 2; i++) {
-      player[i].paint(g);
+      player[i].paint(g, frame);
     }
 
     //ゲームオーバーメッセージの表示
