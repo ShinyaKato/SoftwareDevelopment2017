@@ -1,8 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.*;
 
 public class Block extends Sprite {
-  Image image;
+  private Image image;
+  private Random random = new Random();
 
   public Block(int x, int y) {
     super(x, y);
@@ -12,6 +14,13 @@ public class Block extends Sprite {
   }
 
   public void update() {
+  }
+
+  public Item getItem() {
+    if(random.nextInt(5) == 0) {
+      return new Item(x, y);
+    }
+    return null;
   }
 
   public void paint(Graphics g) {

@@ -23,14 +23,14 @@ public class FieldFloorCell extends FieldCell {
   }
 
     public boolean whichType(int x, int y){
-	return true;
+      return true;
     }
 
   public void paint(Graphics g) {
     g.drawImage(image, x * CELL_WIDTH, y * CELL_HEIGHT, null);
     if(block != null) block.paint(g);
+    if(item != null) item.paint(g);
     if(bomb != null) bomb.paint(g);
     if(fire != null) fire.paint(g);
-    if(item != null) item.paint(g);
   }
 }

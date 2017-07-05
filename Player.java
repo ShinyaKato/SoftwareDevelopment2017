@@ -78,6 +78,15 @@ public class Player extends Sprite {
     return bomb_range;
   }
 
+  public void addBombNumber() {
+    bomb_number++;
+    if(bomb_number > MAX_BOMB) bomb_number = MAX_BOMB;
+  }
+
+  public void addBombRange() {
+    bomb_range++;
+  }
+
   public void paint(Graphics g, JFrame frame) {
     int gx = chipx[count] * width;
     int gy = chipy[dir] * height;

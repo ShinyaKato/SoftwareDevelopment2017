@@ -120,6 +120,8 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
             if(block != null) {
               cells[i + n][j].remove(block);
               cells[i + n][j].set(new Fire(i + n, j));
+              Item item = block.getItem();
+              cells[i + n][j].set(item);
               break;
             } else if(cells[i + n][j].whichType(i + n, j)) {
               cells[i + n][j].set(new Fire(i + n, j));
@@ -133,6 +135,8 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
             if(block != null) {
               cells[i - n][j].remove(block);
               cells[i - n][j].set(new Fire(i - n, j));
+              Item item = block.getItem();
+              cells[i - n][j].set(item);
               break;
             } else if(cells[i - n][j].whichType(i - n, j)) {
               cells[i - n][j].set(new Fire(i - n, j));
@@ -146,6 +150,8 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
             if(block != null) {
               cells[i][j + m].remove(block);
               cells[i][j + m].set(new Fire(i, j + m));
+              Item item = block.getItem();
+              cells[i][j + m].set(item);
               break;
             } else if(cells[i][j + m].whichType(i, j + m)){
               cells[i][j + m].set(new Fire(i, j + m));
@@ -159,6 +165,8 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
             if(block != null) {
               cells[i][j - m].remove(block);
               cells[i][j - m].set(new Fire(i, j - m));
+              Item item = block.getItem();
+              cells[i][j - m].set(item);
               break;
             } else if(cells[i][j - m].whichType(i,j - m)) {
               cells[i][j - m].set(new Fire(i, j - m));
@@ -184,6 +192,11 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
           player[i].moveTo(dir);
           cells[cx][cy].remove(player[i]);
           cells[nx][ny].set(player[i]);
+          Item item = cells[nx][ny].getItem();
+          if(item != null) {
+            item.activate(player[i]);
+            cells[nx][ny].remove(item);
+          }
         }
       }
 
