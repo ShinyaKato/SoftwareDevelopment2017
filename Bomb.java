@@ -2,14 +2,24 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Bomb extends Sprite {
-  Image image;
-  public int count = 120;
+  private Image image;
+  private int count;
+  private boolean used = false;
+  private Player player;
 
-  public Bomb(int x, int y) {
-    super(x, y);
+  public Bomb(Player player) {
+    super(0, 0);
+    this.player = player;
     try {
       this.image = new ImageIcon("./bomb_anim.png").getImage();
     } catch(Exception e) {}
+  }
+
+  public void set(int x, int y) {
+    this.x = x;
+    this.y = y;
+    this.used = true;
+    this.count = 120;
   }
 
   public void update() {
@@ -18,6 +28,18 @@ public class Bomb extends Sprite {
 
   public boolean exploded() {
     return count <= 0;
+  }
+
+  public void expload() {
+    used = false;
+  }
+
+  public boolean isUsed() {
+    return used;
+  }
+
+  public Player getPlayer() {
+    return player;
   }
 
   public void paint(Graphics g) {
