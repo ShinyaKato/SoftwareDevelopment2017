@@ -5,8 +5,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.applet.*;
-
-import javax.sound.sampled.*; //sound
+import javax.sound.sampled.*;
 
 class GamePanel extends JPanel implements Runnable, KeyListener {
   public static long MSEC_PER_FRAME = 17;
@@ -33,22 +32,29 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
 
    Clip bgm1, bgm2, sc1, sc2, sc3, sc4, sc5;
 
-    public static Clip getClip(String filename) {
-        Clip clip = null;
-        try {
-            AudioInputStream ais = AudioSystem.getAudioInputStream(new File(filename));
-            clip = (Clip)AudioSystem.getLine(new Line.Info(Clip.class));
-            clip.open(ais);
-        } catch(Exception e) {
-            System.out.println(e);
-            System.exit(0);
-        }
-        return clip;
-    }
+   public static Clip getClip(String filename) {
+     Clip clip = null;
+     try {
+       AudioInputStream ais = AudioSystem.getAudioInputStream(new File(filename));
+       clip = (Clip)AudioSystem.getLine(new Line.Info(Clip.class));
+       clip.open(ais);
+     } catch(Exception e) {
+       System.out.println(e);
+       System.exit(0);
+     }
+     return clip;
+   }
 
   public GamePanel(MainFrame f) {
     frame = f;
     setBounds(0, 0, Sprite.SCREEN_WIDTH, Sprite.SCREEN_HEIGHT);
+    bgm1 = getClip("bgm.mid");
+    bgm2 = getClip("bgm.wav");
+    sc1 = getClip("setbomb.wav");
+    sc2 = getClip("explosion.wav");
+    sc3 = getClip("item.wav");
+    sc4 = getClip("loser.wav");
+    sc5 = getClip("winner.wav");
   }
 
   public void init(Socket s, int playerNo) {
@@ -60,14 +66,6 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
     for(int i = 0; i < 2; i++) {
       keyInput[i] = new KeyInput(in, out);
     }
-
-    bgm1 = getClip("bgm.mid");
-    bgm2 = getClip("bgm.wav");
-    sc1 = getClip("setbomb.wav");
-    sc2 = getClip("explosion.wav");
-    sc3 = getClip("item.wav");
-    sc4 = getClip("loser.wav");
-    sc5 = getClip("winner.wav");
 
     this.playerNo = playerNo;
     player[0] = new Player(1, 1);
