@@ -6,6 +6,8 @@ import java.net.*;
 import java.util.*;
 import java.applet.*;
 
+import javax.sound.sampled.*; //sound
+
 class GamePanel extends JPanel implements Runnable, KeyListener {
   public static long MSEC_PER_FRAME = 17;
   public static Random random = new Random(36);
@@ -26,17 +28,27 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
   private int counter;
   private int counter2;
 
-  private AudioClip bgm, seBomb, seItem;
-
   public static boolean gmoflg = false;
   public static boolean winflg = false;
+
+   Clip bgm1, bgm2, sc1, sc2, sc3, sc4, sc5;
+
+    public static Clip getClip(String filename) {
+        Clip clip = null;
+        try {
+            AudioInputStream ais = AudioSystem.getAudioInputStream(new File(filename));
+            clip = (Clip)AudioSystem.getLine(new Line.Info(Clip.class));
+            clip.open(ais);
+        } catch(Exception e) {
+            System.out.println(e);
+            System.exit(0);
+        }
+        return clip;
+    }
 
   public GamePanel(MainFrame f) {
     frame = f;
     setBounds(0, 0, Sprite.SCREEN_WIDTH, Sprite.SCREEN_HEIGHT);
-    bgm = java.applet.Applet.newAudioClip(getClass().getResource("bgm.wav"));
-    seBomb = java.applet.Applet.newAudioClip(getClass().getResource("explosion.wav"));
-    seItem = java.applet.Applet.newAudioClip(getClass().getResource("item.wav"));
   }
 
   public void init(Socket s, int playerNo) {
@@ -48,6 +60,14 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
     for(int i = 0; i < 2; i++) {
       keyInput[i] = new KeyInput(in, out);
     }
+
+    bgm1 = getClip("bgm.mid");
+    bgm2 = getClip("bgm.wav");
+    sc1 = getClip("setbomb.wav");
+    sc2 = getClip("explosion.wav");
+    sc3 = getClip("item.wav");
+    sc4 = getClip("loser.wav");
+    sc5 = getClip("winner.wav");
 
     this.playerNo = playerNo;
     player[0] = new Player(1, 1);
@@ -80,6 +100,9 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
   }
 
   public void run(){
+    bgm1.setFramePosition(0);
+    bgm1.loop(Clip.LOOP_CONTINUOUSLY);
+
     while(true) {
       long begin = System.currentTimeMillis();
 
@@ -121,7 +144,8 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
         if(bomb != null && bomb.exploded()) {
           int range = bomb.getPlayer().getBombRange();
           bomb.expload();
-          seBomb.play();
+          sc2.setFramePosition(0);
+          sc2.start();
           cells[i][j].remove(bomb);
           cells[i][j].set(new Fire(i, j));
           for(int n = 1; n <= range; n++) {
@@ -209,8 +233,9 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
           Item item = cells[nx][ny].getItem();
           if(item != null) {
             item.activate(player[i]);
-            seItem.play();
             cells[nx][ny].remove(item);
+            sc3.setFramePosition(0);
+            sc3.start();
           }
         }
       }
@@ -219,6 +244,8 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
         Bomb bomb = player[i].getBomb();
         if(bomb != null) {
           cells[cx][cy].set(bomb);
+          sc1.setFramePosition(0); //爆弾設置音巻き戻し
+          sc1.start(); //爆弾設置音再生
         }
       }
     }
@@ -229,9 +256,14 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
     int oy = player[1 - playerNo].currentY();
     if(cells[mx][my].getFire() != null && winflg == false) {
       gmoflg = true;
-      cells[mx][my].getDead();
-    } else if(cells[ox][oy].getFire()!=null && gmoflg==false) {
+      bgm1.stop();
+      sc4.setFramePosition(0);
+      sc4.start();
+    } else if(cells[player[1-playerNo].currentX()][player[1-playerNo].currentY()].getFire()!=null && gmoflg==false) {
       winflg = true;
+      bgm1.stop();
+      sc5.setFramePosition(0);
+      sc5.start();
     }
     if(gmoflg == true || winflg == true) {
       counter2++;

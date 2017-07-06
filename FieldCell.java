@@ -4,7 +4,6 @@ public abstract class FieldCell extends Sprite {
   protected Bomb bomb;
   protected Fire fire;
   protected Item item;
-  protected Dead dead;
 
   public static boolean isin(int x, int y) {
     return 0 <= x && x < WIDTH && 0 <= y && y < HEIGHT;
@@ -88,10 +87,6 @@ public abstract class FieldCell extends Sprite {
 
   public Item getItem() {
     return this.item;
-  }
-
-  public Dead getDead() {
-    return this.dead;
   }
 
   public void burnItem() {
