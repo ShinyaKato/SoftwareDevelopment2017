@@ -88,4 +88,8 @@ public abstract class FieldCell extends Sprite {
   public Item getItem() {
     return this.item;
   }
+
+  public void burnItem() {
+    this.item = null;
+  }
 }

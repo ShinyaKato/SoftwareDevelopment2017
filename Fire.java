@@ -3,7 +3,7 @@ import java.awt.*;
 
 public class Fire extends Sprite {
   Image image;
-  public int count = 60;
+  public int count = 30;
 
   public Fire(int x, int y) {
     super(x, y);
@@ -21,6 +21,6 @@ public class Fire extends Sprite {
   }
 
   public void paint(Graphics g) {
-    g.drawImage(image, x * CELL_WIDTH, y * CELL_HEIGHT, (x + 1) * CELL_WIDTH, (y + 1) * CELL_HEIGHT, ((60 - count) / 10) * CELL_WIDTH, 5 * CELL_HEIGHT, ((60 - count) / 10 + 1) * CELL_WIDTH, 6 * CELL_HEIGHT, null);
+    g.drawImage(image, x * CELL_WIDTH, y * CELL_HEIGHT, (x + 1) * CELL_WIDTH, (y + 1) * CELL_HEIGHT, ((30 - count) / 5) * CELL_WIDTH, 5 * CELL_HEIGHT, ((30 - count) / 5 + 1) * CELL_WIDTH, 6 * CELL_HEIGHT, null);
   }
 }

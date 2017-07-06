@@ -4,17 +4,24 @@ import java.awt.*;
 public class Player extends Sprite {
   private static final int chipx[] = { 1, 2, 2, 2, 1, 1, 0, 0, 0 };
   private static final int chipy[] = { 0, 2, 3, 1 };
+  private static final int MAX_BOMB = 8;
 
   private Image image;
   private int width = CELL_WIDTH, height = CELL_HEIGHT;
   private int count = 0;
   private int dir = 0;
   private int px, py;
+  private Bomb bombs[] = new Bomb[MAX_BOMB];
+  private int bomb_number = 2;
+  private int bomb_range = 2;
 
   public Player(int x, int y) {
     super(x, y);
     this.px = x * CELL_WIDTH;
     this.py = y * CELL_HEIGHT;
+    for(int i = 0; i < MAX_BOMB; i++) {
+      bombs[i] = new Bomb(this);
+    }
     try {
       this.image = new ImageIcon("./player.png").getImage();
     } catch(Exception e) {}
@@ -55,6 +62,29 @@ public class Player extends Sprite {
       this.x += DIFF[dir];
       this.y += DIFF[dir + 1];
     }
+  }
+
+  public Bomb getBomb() {
+    for(int i = 0; i < bomb_number; i++) {
+      if(!bombs[i].isUsed()) {
+        bombs[i].set(x, y);
+        return bombs[i];
+      }
+    }
+    return null;
+  }
+
+  public int getBombRange() {
+    return bomb_range;
+  }
+
+  public void addBombNumber() {
+    bomb_number++;
+    if(bomb_number > MAX_BOMB) bomb_number = MAX_BOMB;
+  }
+
+  public void addBombRange() {
+    bomb_range++;
   }
 
   public void paint(Graphics g, JFrame frame) {

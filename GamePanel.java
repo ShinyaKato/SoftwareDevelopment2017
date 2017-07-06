@@ -4,11 +4,13 @@ import java.awt.event.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.applet.*;
 
 import javax.sound.sampled.*; //sound
 
 class GamePanel extends JPanel implements Runnable, KeyListener {
   public static long MSEC_PER_FRAME = 17;
+  public static Random random = new Random(36);
 
   private MainFrame frame;
 
@@ -24,18 +26,13 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
   private int playerNo;
 
   private int counter;
-  private int counter2; //
+  private int counter2;
 
-  public static boolean gmoflg = false; //flag of gameover
-  public static boolean winflg = false; //flag of showing winner
+  public static boolean gmoflg = false;
+  public static boolean winflg = false;
 
-   Clip bgm; // サウンドクリップ（BGM)
-   Clip sc1; // サウンドクリップ（爆弾設置の音）
-   Clip sc2; //サウンドクリップ（爆破時の音）
-   Clip sc3; //loser (GAMEOVER)
-   Clip sc4; //winner
+   Clip bgm1, bgm2, sc1, sc2, sc3, sc4, sc5;
 
-   // ファイルからサウンドクリップ取得
     public static Clip getClip(String filename) {
         Clip clip = null;
         try {
@@ -52,11 +49,6 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
   public GamePanel(MainFrame f) {
     frame = f;
     setBounds(0, 0, Sprite.SCREEN_WIDTH, Sprite.SCREEN_HEIGHT);
-    bgm = getClip("bgm.mid"); // BGM読み込み
-    sc1 = getClip("setbomb.wav"); // 設置の音読み込み
-    sc2 = getClip("explode.wav"); // 爆発の音読み込み
-    sc3 = getClip("loser.wav"); //ゲームオーバー時の音
-    sc4 = getClip("winner.wav"); //Winner
   }
 
   public void init(Socket s, int playerNo) {
@@ -69,6 +61,14 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
       keyInput[i] = new KeyInput(in, out);
     }
 
+    bgm1 = getClip("bgm.mid");
+    bgm2 = getClip("bgm.wav");
+    sc1 = getClip("setbomb.wav");
+    sc2 = getClip("explosion.wav");
+    sc3 = getClip("item.wav");
+    sc4 = getClip("loser.wav");
+    sc5 = getClip("winner.wav");
+
     this.playerNo = playerNo;
     player[0] = new Player(1, 1);
     player[1] = new Player(Sprite.WIDTH - 2, Sprite.HEIGHT - 2);
@@ -79,7 +79,7 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
           cells[i][j] = new FieldWallCell(i, j);
         } else {
           cells[i][j] = new FieldFloorCell(i, j);
-          if(!((i < 3 && j < 3) || (i > Sprite.WIDTH - 4 && j > Sprite.HEIGHT - 4))) {
+          if(!((i < 3 && j < 3) || (i > Sprite.WIDTH - 4 && j > Sprite.HEIGHT - 4)) && random.nextInt(17) < 15) {
             cells[i][j].set(new Block(i, j));
           }
         }
@@ -91,6 +91,7 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
     counter = 0;
     counter2 = 0;
 
+    // bgm.loop();
   }
 
   public void start() {
@@ -99,8 +100,9 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
   }
 
   public void run(){
-    bgm.setFramePosition(0); // 巻き戻し //sound
-    bgm.loop(Clip.LOOP_CONTINUOUSLY); // 繰り返し再生 //sound
+    bgm1.setFramePosition(0);
+    bgm1.loop(Clip.LOOP_CONTINUOUSLY);
+
     while(true) {
       long begin = System.currentTimeMillis();
 
@@ -115,7 +117,7 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
       }
 
       updateGameState();
-      repaint(); //paintComponent呼び出し
+      repaint();
 
       try {
         long past = System.currentTimeMillis() - begin;
@@ -134,81 +136,91 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
       for(int j = 0; j < Sprite.HEIGHT; j++) {
         cells[i][j].update();
         Bomb bomb = cells[i][j].getBomb();
-	Fire fire =cells[i][j].getFire();
-	if(fire != null && fire.exploded()) {
-	     cells[i][j].remove(fire);
-	     }
+        Fire fire =cells[i][j].getFire();
+        if(fire != null && fire.exploded()) {
+          cells[i][j].remove(fire);
+        }
 
         if(bomb != null && bomb.exploded()) {
-          sc2.setFramePosition(0); //罰発音巻き戻し
-          sc2.start(); //爆発音再生
-          /* TODO: 爆風の広がり, ブロックが壊れる処理を実装する */
+          int range = bomb.getPlayer().getBombRange();
+          bomb.expload();
+          sc2.setFramePosition(0);
+          sc2.start();
           cells[i][j].remove(bomb);
-	  cells[i][j].set(new Fire(i, j));
-	  
-	   for(int n =1 ; n<5 ; n++){
-	      if(i+n>=Sprite.WIDTH) break;
-	      Block block = cells[i+n][j].getBlock();
-	      if(block != null){
-		  cells[i+n][j].remove(block);
-		  cells[i+n][j].set(new Fire(i+n, j));
-		  break;
-	      }else if (cells[i+n][j].whichType(i+n,j)){
-		  cells[i+n][j].set(new Fire(i+n, j)); 
-	      }else{
-		  break;
-	      }
-	  }
-	  for(int n =1 ; n<5 ; n++){
-	      if(i-n<=0) break;
-	      Block block = cells[i-n][j].getBlock();
-	      if(block != null){
-		  cells[i-n][j].remove(block);
-		  cells[i-n][j].set(new Fire(i-n, j));
-		  break;
-	      }else if (cells[i-n][j].whichType(i-n,j)){
-		  cells[i-n][j].set(new Fire(i-n, j)); 
-	      }else{
-		  break;
-		 
-	      }
-	  }
-	    for(int m =1 ; m<5 ; m++){
-	       if(j+m>=Sprite.HEIGHT) break;
-	      Block block = cells[i][j+m].getBlock();
-	       if(block != null){
-		  cells[i][j+m].remove(block);
-		  cells[i][j+m].set(new Fire(i, j+m));
-		  break;
-	      }else if (cells[i][j+m].whichType(i,j+m)){
-		  cells[i][j+m].set(new Fire(i, j+m)); 
-	      }else{
-		  break; 
-	      }
-	   }
-	     for(int m =1 ; m<5 ; m++){
-	       if(j-m<=0) break;
-	      Block block = cells[i][j-m].getBlock();
-	       if(block != null){
-		  cells[i][j-m].remove(block);
-		  cells[i][j-m].set(new Fire(i, j-m));
-		  break;
-	      }else if (cells[i][j-m].whichType(i,j-m)){
-		  cells[i][j-m].set(new Fire(i, j-m)); 
-	      }else{
-		  break;
-	      }
-	   }
+          cells[i][j].set(new Fire(i, j));
+          for(int n = 1; n <= range; n++) {
+            if(i + n >= Sprite.WIDTH) break;
+            Block block = cells[i + n][j].getBlock();
+            if(block != null) {
+              cells[i + n][j].remove(block);
+              cells[i + n][j].set(new Fire(i + n, j));
+              Item item = block.getItem();
+              cells[i + n][j].set(item);
+              break;
+            } else if(cells[i + n][j].whichType(i + n, j)) {
+              cells[i + n][j].set(new Fire(i + n, j));
+              cells[i + n][j].burnItem();
+            } else {
+              break;
+            }
+          }
+          for(int n = 1; n <= range; n++) {
+            if(i - n <= 0) break;
+            Block block = cells[i - n][j].getBlock();
+            if(block != null) {
+              cells[i - n][j].remove(block);
+              cells[i - n][j].set(new Fire(i - n, j));
+              Item item = block.getItem();
+              cells[i - n][j].set(item);
+              break;
+            } else if(cells[i - n][j].whichType(i - n, j)) {
+              cells[i - n][j].set(new Fire(i - n, j));
+              cells[i - n][j].burnItem();
+            } else {
+              break;
+            }
+          }
+          for(int m = 1 ; m <= range; m++) {
+            if(j + m >= Sprite.HEIGHT) break;
+            Block block = cells[i][j + m].getBlock();
+            if(block != null) {
+              cells[i][j + m].remove(block);
+              cells[i][j + m].set(new Fire(i, j + m));
+              Item item = block.getItem();
+              cells[i][j + m].set(item);
+              break;
+            } else if(cells[i][j + m].whichType(i, j + m)){
+              cells[i][j + m].set(new Fire(i, j + m));
+              cells[i][j + m].burnItem();
+            } else {
+              break;
+            }
+          }
+          for(int m = 1; m <= range; m++) {
+            if(j - m <= 0) break;
+            Block block = cells[i][j - m].getBlock();
+            if(block != null) {
+              cells[i][j - m].remove(block);
+              cells[i][j - m].set(new Fire(i, j - m));
+              Item item = block.getItem();
+              cells[i][j - m].set(item);
+              break;
+            } else if(cells[i][j - m].whichType(i, j - m)) {
+              cells[i][j - m].set(new Fire(i, j - m));
+              cells[i][j - m].burnItem();
+            } else {
+              break;
+            }
+          }
         }
-	    
       }
     }
 
     for(int i = 0; i < 2; i++) {
+      player[i].update();
+
       int cx = player[i].currentX();
       int cy = player[i].currentY();
-
-      player[i].update();
 
       int dir = keyInput[i].moveDirection();
       if(dir >= 0 && !player[i].isMoving()) {
@@ -218,49 +230,48 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
           player[i].moveTo(dir);
           cells[cx][cy].remove(player[i]);
           cells[nx][ny].set(player[i]);
+          Item item = cells[nx][ny].getItem();
+          if(item != null) {
+            item.activate(player[i]);
+            cells[nx][ny].remove(item);
+            sc3.setFramePosition(0);
+            sc3.start();
+          }
         }
       }
 
       if(keyInput[i].bombDirection()) {
-        Bomb bomb = new Bomb(cx, cy);
-        cells[cx][cy].set(bomb);
-        sc1.setFramePosition(0); //爆弾設置音巻き戻し
-        sc1.start(); //爆弾設置音再生
+        Bomb bomb = player[i].getBomb();
+        if(bomb != null) {
+          cells[cx][cy].set(bomb);
+          sc1.setFramePosition(0); //爆弾設置音巻き戻し
+          sc1.start(); //爆弾設置音再生
+        }
       }
     }
 
-    // TODO: 勝敗判定
-    //変更〜
-    if(cells[player[playerNo].currentX()][player[playerNo].currentY()].getFire()!=null && winflg==false) {
+    int mx = player[playerNo].currentX();
+    int my = player[playerNo].currentY();
+    int ox = player[1 - playerNo].currentX();
+    int oy = player[1 - playerNo].currentY();
+    if(cells[mx][my].getFire() != null && winflg == false) {
       gmoflg = true;
-      //cells[player[playerNo].currentX()][player[playerNo].currentY()].getDead(); //ダメージを受けたら、変色して動けなくしたい
-      bgm.stop(); // BGMを止める
-      sc3.setFramePosition(0); //敗戦音巻き戻し
-      sc3.start(); //敗戦音再生
+      bgm1.stop();
+      sc4.setFramePosition(0);
+      sc4.start();
     } else if(cells[player[1-playerNo].currentX()][player[1-playerNo].currentY()].getFire()!=null && gmoflg==false) {
       winflg = true;
-      bgm.stop(); // BGMを止める
-      sc4.setFramePosition(0); //勝利音巻き戻し
-      sc4.start(); //勝利音音再生
+      bgm1.stop();
+      sc5.setFramePosition(0);
+      sc5.start();
     }
-
-    if(gmoflg==true || winflg==true) {
+    if(gmoflg == true || winflg == true) {
       counter2++;
-      if (counter2 == 150) {
-        //try {
-          //Thread.sleep(3000);
-        //} catch (InterruptedException e) {}
-        //setVisible(false);
-        //MainFrame.mainPanel.setVisible(true);
+      if(counter2 == 150) {
         System.exit(0);
       }
     }
-    //〜変更
-
   }
-
-
-
 
   public void paintComponent(Graphics g) {
     for(int i = 0; i < Sprite.WIDTH; i++) {
@@ -273,21 +284,20 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
       player[i].paint(g, frame);
     }
 
-    //ゲームオーバーメッセージの表示
-    if (gmoflg==true) {
-      Graphics2D g2 = (Graphics2D)g;
+    if(gmoflg == true) {
+      Graphics2D g2 = (Graphics2D) g;
       String text = "GAME OVER";
       Font font = new Font("Arial", Font.BOLD, 80);
       g2.setFont(font);
       g2.setColor(Color.red);
-      g2.drawString(text, Sprite.SCREEN_WIDTH/2-242, Sprite.SCREEN_HEIGHT/2+20);
-    } else if (winflg==true) { //勝利メッセージの表示
-      Graphics2D g2 = (Graphics2D)g;
+      g2.drawString(text, Sprite.SCREEN_WIDTH / 2 - 242, Sprite.SCREEN_HEIGHT / 2 + 20);
+    } else if(winflg == true) {
+      Graphics2D g2 = (Graphics2D) g;
       String text = "WINNER";
       Font font = new Font("Arial", Font.BOLD, 80);
       g2.setFont(font);
       g2.setColor(Color.green);
-      g2.drawString(text, Sprite.SCREEN_WIDTH/2-164, Sprite.SCREEN_HEIGHT/2+20);
+      g2.drawString(text, Sprite.SCREEN_WIDTH / 2 - 164, Sprite.SCREEN_HEIGHT / 2 + 20);
     }
   }
 
