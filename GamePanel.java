@@ -127,7 +127,92 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
     }
   }
 
-
+  public void explodeBomb(int i, int j, Bomb bomb) {
+    int range = bomb.getPlayer().getBombRange();
+    bomb.expload();
+    cells[i][j].remove(bomb);
+    cells[i][j].set(new Fire(i, j));
+    for(int n = 1; n <= range; n++) {
+      if(i + n >= Sprite.WIDTH) break;
+      Block block = cells[i + n][j].getBlock();
+      if(block != null) {
+        cells[i + n][j].remove(block);
+        cells[i + n][j].set(new Fire(i + n, j));
+        Item item = block.getItem();
+        cells[i + n][j].set(item);
+        break;
+      } else if(cells[i + n][j].whichType(i + n, j)) {
+        cells[i + n][j].set(new Fire(i + n, j));
+        cells[i + n][j].burnItem();
+        Bomb bomb2 = cells[i + n][j].getBomb();
+        if(bomb2 != null) {
+          explodeBomb(i + n, j, bomb2);
+        }
+      } else {
+        break;
+      }
+    }
+    for(int n = 1; n <= range; n++) {
+      if(i - n <= 0) break;
+      Block block = cells[i - n][j].getBlock();
+      if(block != null) {
+        cells[i - n][j].remove(block);
+        cells[i - n][j].set(new Fire(i - n, j));
+        Item item = block.getItem();
+        cells[i - n][j].set(item);
+        break;
+      } else if(cells[i - n][j].whichType(i - n, j)) {
+        cells[i - n][j].set(new Fire(i - n, j));
+        cells[i - n][j].burnItem();
+        Bomb bomb2 = cells[i - n][j].getBomb();
+        if(bomb2 != null) {
+          explodeBomb(i - n, j, bomb2);
+        }
+      } else {
+        break;
+      }
+    }
+    for(int m = 1 ; m <= range; m++) {
+      if(j + m >= Sprite.HEIGHT) break;
+      Block block = cells[i][j + m].getBlock();
+      if(block != null) {
+        cells[i][j + m].remove(block);
+        cells[i][j + m].set(new Fire(i, j + m));
+        Item item = block.getItem();
+        cells[i][j + m].set(item);
+        break;
+      } else if(cells[i][j + m].whichType(i, j + m)){
+        cells[i][j + m].set(new Fire(i, j + m));
+        cells[i][j + m].burnItem();
+        Bomb bomb2 = cells[i][j + m].getBomb();
+        if(bomb2 != null) {
+          explodeBomb(i, j + m, bomb2);
+        }
+      } else {
+        break;
+      }
+    }
+    for(int m = 1; m <= range; m++) {
+      if(j - m <= 0) break;
+      Block block = cells[i][j - m].getBlock();
+      if(block != null) {
+        cells[i][j - m].remove(block);
+        cells[i][j - m].set(new Fire(i, j - m));
+        Item item = block.getItem();
+        cells[i][j - m].set(item);
+        break;
+      } else if(cells[i][j - m].whichType(i, j - m)) {
+        cells[i][j - m].set(new Fire(i, j - m));
+        cells[i][j - m].burnItem();
+        Bomb bomb2 = cells[i][j - m].getBomb();
+        if(bomb2 != null) {
+          explodeBomb(i, j - m, bomb2);
+        }
+      } else {
+        break;
+      }
+    }
+  }
 
   public void updateGameState() {
     for(int i = 0; i < Sprite.WIDTH; i++) {
@@ -140,76 +225,9 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
         }
 
         if(bomb != null && bomb.exploded()) {
-          int range = bomb.getPlayer().getBombRange();
-          bomb.expload();
+          explodeBomb(i, j, bomb);
           sc2.setFramePosition(0);
           sc2.start();
-          cells[i][j].remove(bomb);
-          cells[i][j].set(new Fire(i, j));
-          for(int n = 1; n <= range; n++) {
-            if(i + n >= Sprite.WIDTH) break;
-            Block block = cells[i + n][j].getBlock();
-            if(block != null) {
-              cells[i + n][j].remove(block);
-              cells[i + n][j].set(new Fire(i + n, j));
-              Item item = block.getItem();
-              cells[i + n][j].set(item);
-              break;
-            } else if(cells[i + n][j].whichType(i + n, j)) {
-              cells[i + n][j].set(new Fire(i + n, j));
-              cells[i + n][j].burnItem();
-            } else {
-              break;
-            }
-          }
-          for(int n = 1; n <= range; n++) {
-            if(i - n <= 0) break;
-            Block block = cells[i - n][j].getBlock();
-            if(block != null) {
-              cells[i - n][j].remove(block);
-              cells[i - n][j].set(new Fire(i - n, j));
-              Item item = block.getItem();
-              cells[i - n][j].set(item);
-              break;
-            } else if(cells[i - n][j].whichType(i - n, j)) {
-              cells[i - n][j].set(new Fire(i - n, j));
-              cells[i - n][j].burnItem();
-            } else {
-              break;
-            }
-          }
-          for(int m = 1 ; m <= range; m++) {
-            if(j + m >= Sprite.HEIGHT) break;
-            Block block = cells[i][j + m].getBlock();
-            if(block != null) {
-              cells[i][j + m].remove(block);
-              cells[i][j + m].set(new Fire(i, j + m));
-              Item item = block.getItem();
-              cells[i][j + m].set(item);
-              break;
-            } else if(cells[i][j + m].whichType(i, j + m)){
-              cells[i][j + m].set(new Fire(i, j + m));
-              cells[i][j + m].burnItem();
-            } else {
-              break;
-            }
-          }
-          for(int m = 1; m <= range; m++) {
-            if(j - m <= 0) break;
-            Block block = cells[i][j - m].getBlock();
-            if(block != null) {
-              cells[i][j - m].remove(block);
-              cells[i][j - m].set(new Fire(i, j - m));
-              Item item = block.getItem();
-              cells[i][j - m].set(item);
-              break;
-            } else if(cells[i][j - m].whichType(i, j - m)) {
-              cells[i][j - m].set(new Fire(i, j - m));
-              cells[i][j - m].burnItem();
-            } else {
-              break;
-            }
-          }
         }
       }
     }
