@@ -30,7 +30,7 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
   public static boolean gmoflg = false;
   public static boolean winflg = false;
 
-   Clip bgm1, bgm2, sc1, sc2, sc3, sc4, sc5;
+  Clip bgm1, bgm2, sc1, sc2, sc3, sc4, sc5;
 
    public static Clip getClip(String filename) {
      Clip clip = null;
@@ -284,7 +284,7 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
     }
     if(gmoflg == true || winflg == true) {
       counter2++;
-      if(counter2 == 150) {
+      if(counter2 == 200) {
         System.exit(0);
       }
     }

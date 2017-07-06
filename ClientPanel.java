@@ -1,16 +1,34 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
+import javax.sound.sampled.*;
 
 public class ClientPanel extends JPanel {
   private MainFrame frame;
+  Clip sc_click, sc_cancel;
 
   private JTextField ipField;
+
+  public static Clip getClip(String filename) {
+     Clip clip = null;
+     try {
+       AudioInputStream ais = AudioSystem.getAudioInputStream(new File(filename));
+       clip = (Clip)AudioSystem.getLine(new Line.Info(Clip.class));
+       clip.open(ais);
+     } catch(Exception e) {
+       System.out.println(e);
+       System.exit(0);
+     }
+     return clip;
+   }
 
   public ClientPanel(MainFrame f) {
     frame = f;
     setBounds(0, 0, Sprite.SCREEN_WIDTH, Sprite.SCREEN_WIDTH);
 
+    sc_click = getClip("click.wav");
+    sc_cancel = getClip("cancel.wav");
 
     JPanel cPanel = new JPanel(); //
     JPanel bottomPanel = new JPanel(); //
@@ -32,6 +50,8 @@ public class ClientPanel extends JPanel {
     sbutton.setMargin(new Insets(20, 20, 20, 20));
     sbutton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
+        sc_click.setFramePosition(0);
+        sc_click.start();
         frame.connect(ipField.getText());
       }
     });
@@ -43,6 +63,8 @@ public class ClientPanel extends JPanel {
     cbutton.setMargin(new Insets(20, 20, 20, 20));
     cbutton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
+        sc_cancel.setFramePosition(0);
+        sc_cancel.start();
         frame.stopConnection();
       }
     });
