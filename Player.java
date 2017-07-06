@@ -64,6 +64,12 @@ public class Player extends Sprite {
     }
   }
 
+  public void directTo(int dir) {
+    if(count == 0) {
+      this.dir = dir;
+    }
+  }
+
   public Bomb getBomb() {
     for(int i = 0; i < bomb_number; i++) {
       if(!bombs[i].isUsed()) {

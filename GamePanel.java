@@ -88,8 +88,6 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
 
     counter = 0;
     counter2 = 0;
-
-    // bgm.loop();
   }
 
   public void start() {
@@ -100,6 +98,7 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
   public void run(){
     bgm1.setFramePosition(0);
     bgm1.loop(Clip.LOOP_CONTINUOUSLY);
+    // bgm2.loop(Clip.LOOP_CONTINUOUSLY);
 
     while(true) {
       long begin = System.currentTimeMillis();
@@ -253,6 +252,8 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
             sc3.setFramePosition(0);
             sc3.start();
           }
+        } else {
+          player[i].directTo(dir);
         }
       }
 
@@ -260,8 +261,8 @@ class GamePanel extends JPanel implements Runnable, KeyListener {
         Bomb bomb = player[i].getBomb();
         if(bomb != null) {
           cells[cx][cy].set(bomb);
-          sc1.setFramePosition(0); //爆弾設置音巻き戻し
-          sc1.start(); //爆弾設置音再生
+          sc1.setFramePosition(0);
+          sc1.start();
         }
       }
     }
