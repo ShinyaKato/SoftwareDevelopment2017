@@ -18,7 +18,7 @@ class MainPanel extends JPanel {
     //text.setVerticalAlignment(JLabel.TOP);
     add(text);
 
-    JButton wbutton = new JButton("対戦待ちをする");
+    JButton wbutton = new JButton("Run server");
     wbutton.setFont(new Font("Arial", Font.PLAIN, 20));
     wbutton.setPreferredSize(new Dimension(300, 50));
     wbutton.setMargin(new Insets(20, 20, 20, 20));
@@ -31,7 +31,7 @@ class MainPanel extends JPanel {
     //wbutton.setBackground(Color.RED);
     add(wbutton);
 
-    JButton sbutton = new JButton("対戦相手を指定する");
+    JButton sbutton = new JButton("Connect to server");
     sbutton.setFont(new Font("Arial", Font.PLAIN, 20));
     sbutton.setPreferredSize(new Dimension(300, 50));
     sbutton.setMargin(new Insets(20, 20, 20, 20));
@@ -44,7 +44,7 @@ class MainPanel extends JPanel {
     //sbutton.setBackground(Color.RED);
     add(sbutton);
 
-    JButton qbutton = new JButton("ゲームを終了する");
+    JButton qbutton = new JButton("Exit");
     qbutton.setFont(new Font("Arial", Font.PLAIN, 18));
     qbutton.setPreferredSize(new Dimension(250, 50));
     qbutton.setMargin(new Insets(20, 20, 20, 20));

@@ -12,12 +12,12 @@ public class ServerPanel extends JPanel {
     JPanel cPanel = new JPanel(); //
     JPanel bottomPanel = new JPanel(); //
 
-    JLabel text = new JLabel("接続を待機しています...");
+    JLabel text = new JLabel("Waiting...");
     text.setForeground(Color.WHITE);
     text.setFont(new Font("Arial", Font.PLAIN, 20));
     cPanel.add(text);
 
-    JButton cbutton = new JButton("キャンセル");
+    JButton cbutton = new JButton("Cancel");
     cbutton.setFont(new Font("Arial", Font.PLAIN, 15));
     cbutton.setPreferredSize(new Dimension(120, 50));
     cbutton.setMargin(new Insets(20, 20, 20, 20));

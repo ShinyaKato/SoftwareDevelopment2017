@@ -16,7 +16,7 @@ public class ClientPanel extends JPanel {
     JPanel bottomPanel = new JPanel(); //
 
 
-    JLabel text = new JLabel("\n\n対戦相手のマシン名(IPアドレス)を入力してください :");
+    JLabel text = new JLabel("\n\nType Server Machine Name (or IP Address):");
     text.setFont(new Font("Arial", Font.PLAIN, 20));
     text.setForeground(Color.WHITE);
     cPanel.add(text);
@@ -26,7 +26,7 @@ public class ClientPanel extends JPanel {
     ipField.setFont(new Font("Arial", Font.PLAIN, 24));
     cPanel.add(ipField);
 
-    JButton sbutton = new JButton("入力完了、対戦開始！");
+    JButton sbutton = new JButton("Connect");
     sbutton.setFont(new Font("Arial", Font.PLAIN, 20));
     sbutton.setPreferredSize(new Dimension(350, 70));
     sbutton.setMargin(new Insets(20, 20, 20, 20));
@@ -37,7 +37,7 @@ public class ClientPanel extends JPanel {
     });
     cPanel.add(sbutton);
 
-    JButton cbutton = new JButton("キャンセル");
+    JButton cbutton = new JButton("Cancel");
     cbutton.setFont(new Font("Arial", Font.PLAIN, 15));
     cbutton.setPreferredSize(new Dimension(100, 50));
     cbutton.setMargin(new Insets(20, 20, 20, 20));

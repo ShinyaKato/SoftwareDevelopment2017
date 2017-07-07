@@ -19,7 +19,7 @@ public class MainFrame extends JFrame{
   private Socket client;
 
   public MainFrame(){
-    super("ボンバーマン");
+    super("Software Development");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     Container pane = getContentPane();
